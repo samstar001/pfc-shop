@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
-// Where the Express API lives (read at build time on Vercel)
-const backend = process.env.BACKEND_URL ?? "http://localhost:8000";
+// Where the Express API lives (read at build time on Vercel); trailing slashes are removed
+const backend = (process.env.BACKEND_URL ?? "http://localhost:8000").replace(/\/+$/, "");
 
 const nextConfig: NextConfig = {
   // Proxy /api/* to the backend so the browser only talks to one domain (no CORS, cookies just work)
