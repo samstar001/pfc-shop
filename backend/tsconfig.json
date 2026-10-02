@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    // Compile to modern JavaScript that Node 20+ understands
+    "target": "ES2022",
+
+    // ESM output, following Node's rules for "type": "module"
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+
+    // Source lives in src/, compiled output goes to dist/
+    "rootDir": "src",
+    "outDir": "dist",
+
+    // Strict type checking + smoother interop with CommonJS packages
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  // Only compile the src folder
+  "include": ["src"]
+}
