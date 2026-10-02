@@ -1,8 +1,9 @@
 import express from "express";
-import type { NextFunction, Request, Response } from "express";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import { prisma } from "./lib/prisma.js";
+import { errorHandler, notFound } from "./middleware/errorHandler.js";
+import { catalogueRouter } from "./modules/catalogue/routes.js";
 
 // Create the Express app
 export const app = express();
@@ -28,13 +29,9 @@ app.get("/api/v1/health", async (_req, res) => {
   }
 });
 
-// 404 handler for any route that did not match above
-app.use((_req, res) => {
-  res.status(404).json({ error: { code: "NOT_FOUND", message: "Route not found" } });
-});
+// Feature routes (each phase adds one here)
+app.use("/api/v1", catalogueRouter);
 
-// Central error handler: always returns the same error shape
-app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
-  console.error(err);
-  res.status(500).json({ error: { code: "INTERNAL_ERROR", message: "Something went wrong" } });
-});
+// 404 for unmatched routes, then the central error handler (must stay last)
+app.use(notFound);
+app.use(errorHandler);
