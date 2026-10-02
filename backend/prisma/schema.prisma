@@ -1,0 +1,132 @@
+// ---------- Client + database connection ----------
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL") // pooled connection, used by the app
+  directUrl = env("DIRECT_URL")   // direct connection, used by migrations
+}
+
+// ---------- Enums ----------
+enum Role {
+  CUSTOMER
+  ADMIN
+}
+
+enum OrderType {
+  CATALOGUE
+  CUSTOM
+}
+
+enum OrderStatus {
+  NEW
+  CONTACTED
+  CONFIRMED
+  IN_PRODUCTION
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  UNPAID
+  PENDING
+  PAID
+  FAILED
+  NOT_APPLICABLE
+}
+
+// ---------- Users (created on first Google sign-in) ----------
+model User {
+  id        String   @id @default(uuid())
+  googleSub String   @unique
+  email     String   @unique
+  name      String
+  avatarUrl String?
+  role      Role     @default(CUSTOMER)
+  createdAt DateTime @default(now())
+  orders    Order[]
+}
+
+// ---------- Catalogue: categories ----------
+model Category {
+  id          String    @id @default(uuid())
+  name        String
+  slug        String    @unique
+  description String?
+  imageUrl    String?
+  sortOrder   Int       @default(0)
+  isActive    Boolean   @default(true)
+  products    Product[]
+}
+
+// ---------- Catalogue: products ----------
+model Product {
+  id             String      @id @default(uuid())
+  categoryId     String
+  category       Category    @relation(fields: [categoryId], references: [id])
+  name           String
+  slug           String      @unique
+  description    String
+  images         String[]
+  colors         Json        // [{ "name": "Black", "hex": "#000000" }]
+  sizes          Int[]
+  priceNgn       Int         // whole naira
+  isFeatured     Boolean     @default(false)
+  isNew          Boolean     @default(false)
+  isPopular      Boolean     @default(false)
+  isCustomizable Boolean     @default(true)
+  isPublished    Boolean     @default(true)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  orderItems     OrderItem[]
+
+  @@index([categoryId])
+}
+
+// ---------- Orders (catalogue orders and custom quote requests) ----------
+model Order {
+  id               String        @id @default(uuid())
+  reference        String        @unique // PFC-YYYYMMDD-####
+  userId           String?       // null for guest checkout
+  user             User?         @relation(fields: [userId], references: [id])
+  type             OrderType
+  customerName     String
+  customerPhone    String
+  customerEmail    String?
+  location         String?
+  instructions     String?
+  totalQuantity    Int
+  subtotalNgn      Int?          // null for custom quote requests
+  status           OrderStatus   @default(NEW)
+  paymentStatus    PaymentStatus @default(UNPAID)
+  paymentReference String?       @unique
+  paidAt           DateTime?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  items            OrderItem[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+// ---------- Order items (snapshots keep old orders correct if products change) ----------
+model OrderItem {
+  id                  String   @id @default(uuid())
+  orderId             String
+  order               Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId           String?
+  product             Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  productNameSnapshot String
+  categorySnapshot    String?
+  unitPriceNgn        Int?
+  color               String?
+  sizeBreakdown       Json     // { "40": 3, "41": 5 }
+  quantity            Int
+  footwearType        String?  // custom only
+  designImageUrl      String?  // custom / reference image
+  colorNote           String?  // custom color description
+
+  @@index([orderId])
+}
