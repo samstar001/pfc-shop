@@ -41,3 +41,40 @@ export type Paginated<T> = {
   pageSize: number;
   total: number;
 };
+
+// The signed-in user as returned by GET /auth/me
+export type User = {
+  id: string;
+  email: string;
+  name: string;
+  avatarUrl: string | null;
+  role: "CUSTOMER" | "ADMIN";
+};
+
+// An order as returned by POST /orders and GET /orders/:reference
+export type OrderItemDetail = {
+  id: string;
+  productName: string;
+  color: string | null;
+  sizeBreakdown: Record<string, number>;
+  quantity: number;
+  unitPriceNgn: number | null;
+};
+
+export type OrderDetail = {
+  id: string;
+  reference: string;
+  type: "CATALOGUE" | "CUSTOM";
+  status: string;
+  paymentStatus: "UNPAID" | "PENDING" | "PAID" | "FAILED" | "NOT_APPLICABLE";
+  customerName: string;
+  customerPhone: string;
+  customerEmail: string | null;
+  location: string | null;
+  instructions: string | null;
+  totalQuantity: number;
+  subtotalNgn: number | null;
+  createdAt: string;
+  items: OrderItemDetail[];
+  whatsappUrl: string | null;
+};
