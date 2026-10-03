@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { ApiError, apiGet } from "@/lib/api/client";
 import type { ProductDetail } from "@/lib/api/types";
 import { formatNgn } from "@/lib/format";
+import ProductConfigurator from "@/components/product/ProductConfigurator";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -71,33 +72,6 @@ export default async function ProductPage({ params }: Props) {
         <p className="mt-3 text-2xl font-semibold">{formatNgn(p.priceNgn)}</p>
         <p className="mt-4 text-gray-700">{p.description}</p>
 
-        {/* Available colors */}
-        <h2 className="mt-6 font-medium">Colors</h2>
-        <div className="mt-2 flex flex-wrap gap-2">
-          {p.colors.map((c) => (
-            <span
-              key={c.name}
-              className="flex items-center gap-2 rounded-full border px-3 py-1 text-sm"
-            >
-              <span
-                className="h-3 w-3 rounded-full border"
-                style={{ backgroundColor: c.hex }}
-              />
-              {c.name}
-            </span>
-          ))}
-        </div>
-
-        {/* Available sizes */}
-        <h2 className="mt-6 font-medium">Sizes</h2>
-        <div className="mt-2 flex flex-wrap gap-2">
-          {p.sizes.map((s) => (
-            <span key={s} className="rounded border px-3 py-1 text-sm">
-              {s}
-            </span>
-          ))}
-        </div>
-
         {/* Whether custom requests are supported */}
         <p className="mt-6 text-sm text-gray-600">
           {p.isCustomizable
@@ -105,13 +79,8 @@ export default async function ProductPage({ params }: Props) {
             : "Custom requests are not available for this style."}
         </p>
 
-        {/* Placeholder until Phase 3 adds the configurator and cart */}
-        <button
-          disabled
-          className="mt-6 w-full rounded bg-gray-300 px-5 py-3 font-medium text-gray-600"
-        >
-          Order options coming next
-        </button>
+        {/* Color, sizes, quantity and add to cart */}
+        <ProductConfigurator product={p} />
       </div>
     </div>
   );
