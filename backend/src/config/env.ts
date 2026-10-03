@@ -4,10 +4,31 @@ import { z } from "zod";
 
 // Describe every environment variable the app needs and its type
 const schema = z.object({
-  NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
+  NODE_ENV: z
+    .enum(["development", "production", "test"])
+    .default("development"),
   PORT: z.coerce.number().default(8000),
   DATABASE_URL: z.string().min(1),
   FRONTEND_URL: z.string().url().default("http://localhost:3000"),
+
+  // Sessions: secret used to sign the login cookie
+  JWT_SECRET: z.string().min(32, "JWT_SECRET must be at least 32 characters"),
+
+  // Admins: comma-separated emails → lowercase array, e.g. "a@x.com,b@y.com"
+  ADMIN_EMAILS: z
+    .string()
+    .default("")
+    .transform((v) =>
+      v
+        .split(",")
+        .map((e) => e.trim().toLowerCase())
+        .filter(Boolean),
+    ),
+
+  // Google OAuth credentials from Google Cloud Console
+  GOOGLE_CLIENT_ID: z.string().min(1),
+  GOOGLE_CLIENT_SECRET: z.string().min(1),
+  GOOGLE_REDIRECT_URI: z.string().url(),
 });
 
 // Validate once at startup; the app crashes early with a clear error if something is missing

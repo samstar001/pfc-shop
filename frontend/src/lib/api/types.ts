@@ -41,3 +41,12 @@ export type Paginated<T> = {
   pageSize: number;
   total: number;
 };
+
+// The signed-in user as returned by GET /auth/me
+export type User = {
+  id: string;
+  email: string;
+  name: string;
+  avatarUrl: string | null;
+  role: "CUSTOMER" | "ADMIN";
+};
