@@ -1,4 +1,5 @@
 import Link from "next/link";
+import UserMenu from "./UserMenu";
 
 // Main navigation links shown on every page
 const links = [
@@ -26,6 +27,9 @@ export default function Header() {
             </Link>
           ))}
         </nav>
+
+        {/* Sign in / user menu */}
+        <UserMenu />
       </div>
     </header>
   );
