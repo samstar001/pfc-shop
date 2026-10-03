@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+// 1. Import your AuthProvider component
+import { AuthProvider } from "@/lib/auth/AuthProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -10,7 +12,7 @@ const geistSans = Geist({
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono-variable",
+  variable: "--font-geist-mono",
   subsets: ["latin"],
 });
 
@@ -20,7 +22,6 @@ export const metadata: Metadata = {
     "Shoes, slides, sandals and slippers made by PAT Footwear Collection. Order online or request a custom design.",
 };
 
-// Replaced LayoutProps with standard Next.js TypeScript definition
 export default function RootLayout({
   children,
 }: {
@@ -32,12 +33,14 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="h-full flex flex-col">
-        <Header />
-        {/* Main section handles individual page layout containment */}
-        <main className="flex-1 mx-auto w-full max-w-6xl px-4 py-8">
-          {children}
-        </main>
-        <Footer />
+        {/* 2. Wrap EVERYTHING that needs auth state inside the AuthProvider */}
+        <AuthProvider>
+          <Header />
+          <main className="flex-1 mx-auto w-full max-w-6xl px-4 py-8">
+            {children}
+          </main>
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );
