@@ -29,6 +29,9 @@ const schema = z.object({
   GOOGLE_CLIENT_ID: z.string().min(1),
   GOOGLE_CLIENT_SECRET: z.string().min(1),
   GOOGLE_REDIRECT_URI: z.string().url(),
+
+  // PFC's WhatsApp number in international format, digits only (e.g. 2348012345678). Optional.
+  PFC_WHATSAPP_NUMBER: z.string().default(""),
 });
 
 // Validate once at startup; the app crashes early with a clear error if something is missing

@@ -7,6 +7,7 @@ import { errorHandler, notFound } from "./middleware/errorHandler.js";
 import { adminRouter } from "./modules/admin/routes.js";
 import { authRouter } from "./modules/auth/routes.js";
 import { catalogueRouter } from "./modules/catalogue/routes.js";
+import { ordersRouter } from "./modules/orders/routes.js";
 
 // Create the Express app
 export const app = express();
@@ -36,6 +37,7 @@ app.get("/api/v1/health", async (_req, res) => {
 // Feature routes (each phase adds one here)
 app.use("/api/v1", authRouter);
 app.use("/api/v1", catalogueRouter);
+app.use("/api/v1", ordersRouter);
 app.use("/api/v1", adminRouter);
 
 // 404 for unmatched routes, then the central error handler (must stay last)
