@@ -70,6 +70,12 @@ export default function OrderView() {
         Online payment is coming soon. PFC will contact you to confirm your
         order, the delivery fee and payment.
       </p>
+      {/* Tell the customer where the confirmation email goes */}
+      {order.customerEmail && (
+        <p className="mt-2 text-sm text-gray-600">
+          A confirmation will be emailed to {order.customerEmail}.
+        </p>
+      )}
 
       {/* Items */}
       <div className="mt-6 space-y-3">
