@@ -5,6 +5,7 @@ import { signOrderToken, verifyOrderToken } from "../../lib/orderToken.js";
 import { buildWhatsappUrl } from "../../services/whatsapp.js";
 import { createOrderBody } from "./schema.js";
 import * as service from "./service.js";
+import { sendOrderEmails } from "../../services/orderEmails.js";
 
 type OrderWithItems = Prisma.OrderGetPayload<{ include: { items: true } }>;
 
@@ -36,12 +37,15 @@ function toOrderDetail(order: OrderWithItems) {
   };
 }
 
-// POST /orders — validate, save, and return the order with a guest access token
+// POST /orders — validate, save, return the order, then send emails in the background
 export async function createOrder(req: Request, res: Response) {
   const body = createOrderBody.parse(req.body);
   const order = await service.createOrder(body, req.user?.id);
   const accessToken = await signOrderToken(order.id);
+
+  // Respond first; the emails are fire-and-forget and cannot fail the request
   res.status(201).json({ ...toOrderDetail(order), accessToken });
+  void sendOrderEmails(order, accessToken);
 }
 
 // GET /orders/:reference?token= — allowed with a valid token, or for the owner / an admin
