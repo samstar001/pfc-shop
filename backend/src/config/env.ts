@@ -32,6 +32,13 @@ const schema = z.object({
 
   // PFC's WhatsApp number in international format, digits only (e.g. 2348012345678). Optional.
   PFC_WHATSAPP_NUMBER: z.string().default(""),
+
+  // Email (Mailgun). All optional: if they are missing, emails are skipped and orders still work.
+  MAILGUN_API_KEY: z.string().default(""),
+  MAILGUN_DOMAIN: z.string().default(""),
+  MAILGUN_REGION: z.enum(["us", "eu"]).default("us"),
+  MAIL_FROM: z.string().default(""),
+  PFC_NOTIFY_EMAIL: z.string().default(""),
 });
 
 // Validate once at startup; the app crashes early with a clear error if something is missing
