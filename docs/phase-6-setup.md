@@ -41,7 +41,7 @@ Why both a callback **and** a webhook: the callback only happens if the customer
 Add to `backend/.env` (never commit it):
 
 ```
-PAYSTACK_SECRET_KEY=sk_test_xxxxxxxxxxxxxxxxxxxxxxxx
+PAYSTACK_SECRET_KEY=xxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 Add the name (empty value) to `backend/.env.example`.
@@ -98,14 +98,12 @@ export const paymentLimiter = rateLimit({
   standardHeaders: "draft-7",
   legacyHeaders: false,
   handler: (_req, res) => {
-    res
-      .status(429)
-      .json({
-        error: {
-          code: "RATE_LIMITED",
-          message: "Too many requests, please try again shortly",
-        },
-      });
+    res.status(429).json({
+      error: {
+        code: "RATE_LIMITED",
+        message: "Too many requests, please try again shortly",
+      },
+    });
   },
 });
 ```
