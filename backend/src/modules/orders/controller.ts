@@ -6,6 +6,7 @@ import { buildWhatsappUrl } from "../../services/whatsapp.js";
 import { createOrderBody } from "./schema.js";
 import * as service from "./service.js";
 import { sendOrderEmails } from "../../services/orderEmails.js";
+import { canAccessOrder } from "./access.js";
 
 type OrderWithItems = Prisma.OrderGetPayload<{ include: { items: true } }>;
 
@@ -55,13 +56,8 @@ export async function getOrder(req: Request, res: Response) {
   );
 
   // Same 404 for "missing" and "not yours" so references can't be guessed
-  if (!order) throw new HttpError(404, "NOT_FOUND", "Order not found");
-
   const token = typeof req.query.token === "string" ? req.query.token : null;
-  const tokenOrderId = token ? await verifyOrderToken(token) : null;
-  const isOwner = !!req.user && req.user.id === order.userId;
-  const isAdmin = req.user?.role === "ADMIN";
-  if (tokenOrderId !== order.id && !isOwner && !isAdmin) {
+  if (!order || !(await canAccessOrder(order, token, req.user))) {
     throw new HttpError(404, "NOT_FOUND", "Order not found");
   }
 

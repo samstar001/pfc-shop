@@ -8,22 +8,27 @@ import { adminRouter } from "./modules/admin/routes.js";
 import { authRouter } from "./modules/auth/routes.js";
 import { catalogueRouter } from "./modules/catalogue/routes.js";
 import { ordersRouter } from "./modules/orders/routes.js";
+import { paymentsRouter } from "./modules/payments/routes.js";
+import { webhooksRouter } from "./modules/payments/webhook.routes.js";
 
-// Create the Express app
 export const app = express();
 
 // Trust the hosting proxy (Render) so secure cookies and client IPs work correctly
 app.set("trust proxy", 1);
 
-// Global middleware: security headers, JSON body parsing, cookie parsing, then load the signed-in user
-// NOTE (Phase 6): mount the Paystack webhook BEFORE express.json() using express.raw(),
-// so its signature can be verified against the raw body.
+// 1. GLOBAL SECURITY HEADERS
 app.use(helmet());
+
+// 2. PAYSTACK WEBHOOK ROUTE (CRITICAL PAIRING)
+// Placed BEFORE express.json() so the internal router can capture the raw body stream
+app.use("/api/v1/webhooks", webhooksRouter);
+
+// 3. GLOBAL PARSERS (Applies to all subsequent application feature routes)
 app.use(express.json({ limit: "1mb" }));
 app.use(cookieParser());
 app.use(attachUser);
 
-// Health check: confirms the API is up and can reach the database
+// 4. HEALTH CHECK ROUTE
 app.get("/api/v1/health", async (_req, res) => {
   try {
     await prisma.$queryRaw`SELECT 1`;
@@ -34,12 +39,13 @@ app.get("/api/v1/health", async (_req, res) => {
   }
 });
 
-// Feature routes (each phase adds one here)
+// 5. STANDARD APPLICATION FEATURE ROUTES
 app.use("/api/v1", authRouter);
 app.use("/api/v1", catalogueRouter);
 app.use("/api/v1", ordersRouter);
 app.use("/api/v1", adminRouter);
+app.use("/api/v1", paymentsRouter);
 
-// 404 for unmatched routes, then the central error handler (must stay last)
+// 6. GLOBAL ERROR HANDLING ORCHESTRATION (Must stay at the absolute bottom)
 app.use(notFound);
 app.use(errorHandler);

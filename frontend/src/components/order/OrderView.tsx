@@ -5,6 +5,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { OrderDetail } from "@/lib/api/types";
 import { formatNgn } from "@/lib/format";
+import PayButton from "./PayButton";
 
 // Loads an order by reference (+ token for guests) and shows its details
 export default function OrderView() {
@@ -66,16 +67,25 @@ export default function OrderView() {
           Payment: {order.paymentStatus.replaceAll("_", " ")}
         </span>
       </div>
-      <p className="mt-3 rounded bg-yellow-50 p-3 text-sm text-yellow-900">
-        Online payment is coming soon. PFC will contact you to confirm your
-        order, the delivery fee and payment.
-      </p>
-      {/* Tell the customer where the confirmation email goes */}
-      {order.customerEmail && (
-        <p className="mt-2 text-sm text-gray-600">
-          A confirmation will be emailed to {order.customerEmail}.
+      {/* Payment state */}
+      {order.paymentStatus === "PAID" ? (
+        <p className="mt-3 rounded bg-green-50 p-3 text-sm text-green-900">
+          Payment received. Thank you! PFC will contact you about delivery and
+          the delivery fee.
         </p>
-      )}
+      ) : order.type === "CATALOGUE" && order.subtotalNgn != null ? (
+        <div className="mt-3 rounded bg-yellow-50 p-3 text-sm text-yellow-900">
+          <p>
+            {order.paymentStatus === "FAILED"
+              ? "Your last payment attempt did not go through. You can try again."
+              : "Your order is saved. Pay now to confirm it, or PFC will contact you."}
+          </p>
+          <p className="mt-1 text-xs">
+            Payment covers the items. The delivery fee is confirmed separately
+            by PFC.
+          </p>
+        </div>
+      ) : null}
 
       {/* Items */}
       <div className="mt-6 space-y-3">
@@ -116,6 +126,33 @@ export default function OrderView() {
       </div>
 
       {/* Actions */}
+      <div className="mt-8 flex flex-wrap items-start gap-3">
+        {/* Pay button only while the order is unpaid */}
+        {order.paymentStatus !== "PAID" &&
+          order.type === "CATALOGUE" &&
+          order.subtotalNgn != null && (
+            <PayButton
+              reference={order.reference}
+              token={token}
+              label={`Pay ${formatNgn(order.subtotalNgn)} with Paystack`}
+            />
+          )}
+
+        {order.whatsappUrl && (
+          <a
+            href={order.whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded bg-green-600 px-5 py-3 font-medium text-white"
+          >
+            Send order on WhatsApp
+          </a>
+        )}
+        <Link href="/shop" className="rounded border px-5 py-3 font-medium">
+          Continue shopping
+        </Link>
+      </div>
+
       <div className="mt-8 flex flex-wrap gap-3">
         {order.whatsappUrl && (
           <a

@@ -6,7 +6,7 @@
 **Project:** PAT Footwear Collection (PFC) — online footwear shop
 **Context:** HNG Internship Individual Task 2 + real deployment for a family business
 **Owner:** Samstar
-**Status:** Phases 1–4 ✅ · Phase 5 (Mailgun emails) in progress (see `docs/phase-5-setup.md`)
+**Status:** Phases 1–5 ✅ (all 4 HNG requirements live) · Phase 6 (Paystack test payments) in progress (see `docs/phase-6-setup.md`)
 **Live:** https://pfc-shop.vercel.app (frontend) · https://pfc-shop.onrender.com (API)
 **Submission deadline:** 2026-10-03 (tomorrow). Strategy: **deploy first, submit the live URL, keep shipping to the same URL.**
 **Last updated:** 2026-10-02
@@ -226,8 +226,8 @@ On success: save → (CUSTOM) send quote emails now → return.
 **Payments (Paystack test mode)**
 | Method | Path | Auth | Purpose |
 |---|---|---|---|
-| POST | `/payments/paystack/initialize` | 🔓 + order token | Body `{ orderId, accessToken }` → calls Paystack, sets `PENDING`, returns `{ authorizationUrl }` |
-| GET | `/payments/paystack/verify?reference=` | 🔓 | Verify with Paystack, mark `PAID` (idempotent), return order status |
+| POST | `/payments/paystack/initialize` | 🔓 + order token (or owner/admin session) | Body `{ reference, token? }` → creates Paystack transaction (amount from DB, kobo), sets `PENDING`, returns `{ authorizationUrl }` |
+| GET | `/payments/paystack/verify?reference=&token=` | 🔓 + order token | Verifies with Paystack, checks amount/currency, marks `PAID` once, returns `{ orderReference, paymentStatus }` |
 | POST | `/webhooks/paystack` | Signature (HMAC-SHA512 of raw body with secret key) | `charge.success` → mark `PAID` (idempotent) → send emails |
 
 **Uploads**
@@ -364,16 +364,17 @@ NEXT_PUBLIC_WHATSAPP_NUMBER=
 - [x] `POST /orders`, checkout page, order status page
 - **Done when:** an order appears in Neon from the live checkout.
 
-### Phase 5 — Mailgun ⭐ (in progress)
+### Phase 5 — Mailgun ⭐ ✅
 
 - Step-by-step guide: `docs/phase-5-setup.md`
-- [ ] Sandbox setup, templates (customer confirmation, admin notification)
+- [x] Sandbox setup, templates (customer confirmation, admin notification)
 - **Done when:** your signup email receives the confirmation.
 
 ### 🏁 SUBMISSION CHECKPOINT — Phases 1–5 live on `main`. Submit the URL here, then continue.
 
-### Phase 6 — Paystack Test Payments
+### Phase 6 — Paystack Test Payments (in progress)
 
+- Step-by-step guide: `docs/phase-6-setup.md`
 - [ ] Initialize, redirect, verify, webhook (signature + idempotent), payment status on order
 - [ ] Emails fire on `PAID`
 - **Done when:** a test-card payment flips an order to `PAID`.
@@ -394,6 +395,7 @@ NEXT_PUBLIC_WHATSAPP_NUMBER=
 
 - [ ] Remaining pages, WhatsApp button, SEO, accessibility, rate limits, real photos/content
 - [ ] Verified Mailgun domain, Paystack live keys (when the business account is ready), admin guide
+- [ ] Nodemailer (SMTP) as a second sender behind `sendEmail()` so emails can reach any customer (best with a domain mailbox)
 
 ## 14. Open Questions
 
@@ -423,29 +425,32 @@ NEXT_PUBLIC_WHATSAPP_NUMBER=
 
 ## 15. Decision Log
 
-| ID  | Decision                                                                                                                                                                              | Status                        |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
-| D1  | Web is the main channel; payments + accounts in scope; WhatsApp secondary                                                                                                             | Decided                       |
-| D2  | Express + TypeScript + Prisma backend (not FastAPI)                                                                                                                                   | Decided                       |
-| D3  | Neon for DB, Cloudinary for images                                                                                                                                                    | Decided (Cloudinary proposed) |
-| D4  | Monorepo `pfc-shop/` with `frontend/` + `backend/`                                                                                                                                    | Decided                       |
-| D5  | Same-origin `/api` rewrite, httpOnly cookie sessions                                                                                                                                  | Proposed                      |
-| D6  | Paystack test mode; webhook is source of truth                                                                                                                                        | Decided                       |
-| D7  | Custom order = `Order(type=CUSTOM)`, quote-only, no payment                                                                                                                           | Decided                       |
-| D13 | No delivery fee at checkout; fee worked out after confirmation                                                                                                                        | Decided                       |
-| D14 | Backend is ESM (`"type": "module"`, TS `NodeNext`, relative imports end in `.js`)                                                                                                     | Decided                       |
-| D15 | Code convention: a short line comment above each section of every code file                                                                                                           | Decided                       |
-| D16 | Google redirect URI points at the **frontend** domain (`…/api/v1/auth/google/callback`), proxied to Express, so the session cookie is first-party                                     | Decided                       |
-| D18 | Order access: guests view their order via a signed 30-day `token` link; owners/admins via session; unauthorized and missing orders both return 404                                    | Decided                       |
-| D19 | Cart lives in the browser (Zustand + localStorage); only product ids, colors and quantities go to the API, prices are recomputed server-side                                          | Decided                       |
-| D20 | Email via Mailgun HTTP API with `fetch` (no SDK, no Nodemailer). Mailgun env vars are optional so a missing key skips emails instead of crashing                                      | Decided                       |
-| D21 | Order emails are fire-and-forget after the order is saved; customer text is HTML-escaped; sandbox only reaches verified authorized recipients (max 5) until PFC has a verified domain | Decided                       |
-| D17 | Session JWT holds only the user id; role is read from the DB on every request (admin list changes apply on next login/request)                                                        | Decided                       |
-| D8  | Guest checkout allowed; Google account optional for customers                                                                                                                         | Proposed                      |
-| D9  | Server recomputes all prices/totals; snapshots on order items                                                                                                                         | Decided                       |
-| D10 | Emails never block order creation                                                                                                                                                     | Decided                       |
-| D11 | Deploy skeleton first; `main` auto-deploys to a stable URL                                                                                                                            | Decided                       |
-| D12 | Submission checkpoint after Phases 1–5                                                                                                                                                | Decided                       |
+| ID  | Decision                                                                                                                                                                                                                              | Status                        |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
+| D1  | Web is the main channel; payments + accounts in scope; WhatsApp secondary                                                                                                                                                             | Decided                       |
+| D2  | Express + TypeScript + Prisma backend (not FastAPI)                                                                                                                                                                                   | Decided                       |
+| D3  | Neon for DB, Cloudinary for images                                                                                                                                                                                                    | Decided (Cloudinary proposed) |
+| D4  | Monorepo `pfc-shop/` with `frontend/` + `backend/`                                                                                                                                                                                    | Decided                       |
+| D5  | Same-origin `/api` rewrite, httpOnly cookie sessions                                                                                                                                                                                  | Proposed                      |
+| D6  | Paystack test mode; webhook is source of truth                                                                                                                                                                                        | Decided                       |
+| D7  | Custom order = `Order(type=CUSTOM)`, quote-only, no payment                                                                                                                                                                           | Decided                       |
+| D13 | No delivery fee at checkout; fee worked out after confirmation                                                                                                                                                                        | Decided                       |
+| D14 | Backend is ESM (`"type": "module"`, TS `NodeNext`, relative imports end in `.js`)                                                                                                                                                     | Decided                       |
+| D15 | Code convention: a short line comment above each section of every code file                                                                                                                                                           | Decided                       |
+| D16 | Google redirect URI points at the **frontend** domain (`…/api/v1/auth/google/callback`), proxied to Express, so the session cookie is first-party                                                                                     | Decided                       |
+| D18 | Order access: guests view their order via a signed 30-day `token` link; owners/admins via session; unauthorized and missing orders both return 404                                                                                    | Decided                       |
+| D19 | Cart lives in the browser (Zustand + localStorage); only product ids, colors and quantities go to the API, prices are recomputed server-side                                                                                          | Decided                       |
+| D20 | Email via Mailgun HTTP API with `fetch` (no SDK, no Nodemailer). Mailgun env vars are optional so a missing key skips emails instead of crashing                                                                                      | Decided                       |
+| D21 | Order emails are fire-and-forget after the order is saved; customer text is HTML-escaped; sandbox only reaches verified authorized recipients (max 5) until PFC has a verified domain                                                 | Decided                       |
+| D22 | Checkout email is now REQUIRED (Paystack needs it; receipts go there)                                                                                                                                                                 | Decided                       |
+| D23 | Payments: fresh payment reference per attempt; order id in Paystack metadata; webhook (HMAC-SHA512 on raw body) and callback-verify both call idempotent `settlePayment()`; PAID only if status success + NGN + amount = subtotal×100 | Decided                       |
+| D24 | Payment covers items only; delivery fee confirmed separately by PFC                                                                                                                                                                   | Decided                       |
+| D17 | Session JWT holds only the user id; role is read from the DB on every request (admin list changes apply on next login/request)                                                                                                        | Decided                       |
+| D8  | Guest checkout allowed; Google account optional for customers                                                                                                                                                                         | Proposed                      |
+| D9  | Server recomputes all prices/totals; snapshots on order items                                                                                                                                                                         | Decided                       |
+| D10 | Emails never block order creation                                                                                                                                                                                                     | Decided                       |
+| D11 | Deploy skeleton first; `main` auto-deploys to a stable URL                                                                                                                                                                            | Decided                       |
+| D12 | Submission checkpoint after Phases 1–5                                                                                                                                                                                                | Decided                       |
 
 ## 16. Progress Log
 
@@ -461,6 +466,8 @@ NEXT_PUBLIC_WHATSAPP_NUMBER=
 | 2026-10-03 | 4     | Phase 4 guide written (`docs/phase-4-setup.md`)                                                                                                                                                                      | Build `feat/orders-api`, then `feat/cart-checkout`; deploy; test an order on the live site                  |
 | 2026-10-03 | 4 ✅  | Product configurator, cart, checkout, orders saved to Neon with server-side pricing, confirmation page + WhatsApp link, live                                                                                         | Phase 5                                                                                                     |
 | 2026-10-03 | 5     | Phase 5 guide written (`docs/phase-5-setup.md`); HNG deadline extended                                                                                                                                               | Verify Mailgun recipients, build `feat/mailgun-emails`, deploy, then decide: submit now or do Phase 6 first |
+| 2026-10-03 | 5 ✅  | Mailgun order confirmation + PFC notification working (sandbox, authorized recipients)                                                                                                                               | Phase 6                                                                                                     |
+| 2026-10-03 | 6     | Phase 6 guide written (`docs/phase-6-setup.md`)                                                                                                                                                                      | Create Paystack test account, build `feat/paystack-payments`, set test webhook URL after deploy             |
 
 ## 17. Git Workflow
 
