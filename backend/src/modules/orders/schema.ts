@@ -7,14 +7,8 @@ const phone = z
   .transform((v) => v.replace(/[\s-]/g, ""))
   .pipe(z.string().regex(/^\+?[0-9]{10,15}$/, "Enter a valid phone number"));
 
-// Email is optional; an empty string counts as "not provided"
-const optionalEmail = z
-  .union([
-    z.literal(""),
-    z.string().trim().email("Enter a valid email address"),
-  ])
-  .optional()
-  .transform((v) => v || undefined);
+// Email is required: Paystack needs it for the payment and we send the confirmation there
+const requiredEmail = z.string().trim().email("Enter a valid email address");
 
 // Body of POST /orders (catalogue orders; custom designs are added in Phase 9)
 export const createOrderBody = z.object({
@@ -22,7 +16,7 @@ export const createOrderBody = z.object({
   customer: z.object({
     name: z.string().trim().min(2, "Enter your name").max(100),
     phone,
-    email: optionalEmail,
+    email: requiredEmail,
     location: z.string().trim().max(200).optional(),
   }),
   items: z

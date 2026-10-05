@@ -4,6 +4,10 @@ import type { OrderWithItems } from "../emails/layout.js";
 import { buildOrderConfirmationEmail } from "../emails/order-confirmation.js";
 import { sendEmail } from "./mailgun.js";
 import { buildWhatsappUrl } from "./whatsapp.js";
+import {
+  buildAdminPaymentEmail,
+  buildPaymentReceiptEmail,
+} from "../emails/payment-received.js";
 
 // Send the customer confirmation and the PFC notification for a new order.
 // NEVER throws: an email problem must not affect the order.
@@ -39,5 +43,38 @@ export async function sendOrderEmails(
     await Promise.allSettled(jobs);
   } catch (err) {
     console.error("[mail] sendOrderEmails failed", err);
+  }
+}
+
+// Send the payment receipt (customer) and the "paid" notice (PFC). NEVER throws.
+export async function sendPaymentEmails(
+  order: OrderWithItems,
+  accessToken: string,
+): Promise<void> {
+  try {
+    const base = env.FRONTEND_URL.replace(/\/+$/, "");
+    const orderUrl = `${base}/order/${encodeURIComponent(order.reference)}?token=${encodeURIComponent(accessToken)}`;
+
+    const jobs: Promise<unknown>[] = [];
+
+    if (order.customerEmail) {
+      jobs.push(
+        sendEmail({
+          to: order.customerEmail,
+          ...buildPaymentReceiptEmail(order, orderUrl),
+        }),
+      );
+    }
+
+    const notify = env.PFC_NOTIFY_EMAIL || env.ADMIN_EMAILS[0];
+    if (notify) {
+      jobs.push(
+        sendEmail({ to: notify, ...buildAdminPaymentEmail(order, orderUrl) }),
+      );
+    }
+
+    await Promise.allSettled(jobs);
+  } catch (err) {
+    console.error("[mail] sendPaymentEmails failed", err);
   }
 }
