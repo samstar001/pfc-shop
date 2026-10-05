@@ -41,7 +41,7 @@ Why both a callback **and** a webhook: the callback only happens if the customer
 Add to `backend/.env` (never commit it):
 
 ```
-PAYSTACK_SECRET_KEY=xxxxxxxxxxxxxxxxxxxxxxxx
+PAYSTACK_SECRET_KEY=
 ```
 
 Add the name (empty value) to `backend/.env.example`.
