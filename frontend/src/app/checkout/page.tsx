@@ -150,8 +150,9 @@ export default function CheckoutPage() {
         </label>
 
         <label className="block text-sm font-medium">
-          Email (for your confirmation email)
+          Email * (for payment and your confirmation)
           <input
+            required
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}

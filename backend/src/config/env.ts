@@ -39,6 +39,9 @@ const schema = z.object({
   MAILGUN_REGION: z.enum(["us", "eu"]).default("us"),
   MAIL_FROM: z.string().default(""),
   PFC_NOTIFY_EMAIL: z.string().default(""),
+
+  // Paystack secret key (use the TEST key, sk_test_...). Optional: without it, payments are disabled.
+  PAYSTACK_SECRET_KEY: z.string().default(""),
 });
 
 // Validate once at startup; the app crashes early with a clear error if something is missing
