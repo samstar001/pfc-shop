@@ -47,6 +47,7 @@ export function errorHandler(
       .status(err.status)
       .json({ error: { code: err.code, message: err.message } });
   }
+
   // Upload problems from multer (file too big, wrong field name, ...)
   if (err instanceof multer.MulterError) {
     const tooBig = err.code === "LIMIT_FILE_SIZE";
