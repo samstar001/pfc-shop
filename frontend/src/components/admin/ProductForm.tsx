@@ -253,14 +253,14 @@ export default function ProductForm({
       <div className="flex gap-3">
         <button
           disabled={saving}
-          className="rounded bg-brand px-5 py-2 font-medium text-white disabled:bg-gray-400"
+          className="btn-primary"
         >
           {saving ? "Saving..." : editing ? "Save changes" : "Create product"}
         </button>
         <button
           type="button"
           onClick={() => router.push("/admin/products")}
-          className="rounded border px-5 py-2"
+          className="btn-secondary"
         >
           Cancel
         </button>

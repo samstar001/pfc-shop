@@ -17,7 +17,7 @@ function Card({
   href?: string;
 }) {
   const body = (
-    <div className="rounded-lg border p-4 hover:bg-gray-50">
+    <div className="panel p-4 hover:bg-gray-50">
       <p className="text-sm text-gray-600">{label}</p>
       <p className="mt-1 text-2xl font-bold">{value}</p>
     </div>

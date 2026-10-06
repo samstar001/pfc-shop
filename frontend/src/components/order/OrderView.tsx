@@ -100,7 +100,7 @@ export default function OrderView() {
           Want to see all your orders in one place?{" "}
           <a
             href={`/api/v1/auth/google/login?next=/account`}
-            className="font-medium underline text-blue-600"
+            className="font-medium underline text-brand"
           >
             Sign in with Google
           </a>{" "}
@@ -112,7 +112,7 @@ export default function OrderView() {
       {/* Items */}
       <div className="mt-6 space-y-3">
         {order.items.map((i) => (
-          <div key={i.id} className="rounded-lg border p-4 text-sm">
+          <div key={i.id} className="panel p-4 text-sm">
             <p className="font-medium">
               {i.productName}
               {i.color ? ` · ${i.color}` : ""}
@@ -169,7 +169,7 @@ export default function OrderView() {
             Send order on WhatsApp
           </a>
         )}
-        <Link href="/shop" className="rounded border px-5 py-3 font-medium">
+        <Link href="/shop" className="btn-secondary">
           Continue shopping
         </Link>
       </div>
