@@ -112,7 +112,7 @@ export default function CheckoutPage() {
         <p className="mt-4 text-gray-600">Your cart is empty.</p>
         <Link
           href="/shop"
-          className="mt-4 inline-block rounded bg-black px-5 py-3 text-white"
+          className="mt-4 inline-block rounded bg-brand px-5 py-3 text-white"
         >
           Browse the collection
         </Link>
@@ -207,7 +207,7 @@ export default function CheckoutPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="w-full rounded bg-black px-5 py-3 font-medium text-white disabled:bg-gray-400"
+          className="w-full rounded bg-brand px-5 py-3 font-medium text-white disabled:bg-gray-400"
         >
           {submitting ? "Placing order..." : "Place order"}
         </button>

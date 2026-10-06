@@ -6,7 +6,7 @@
 **Project:** PAT Footwear Collection (PFC) — online footwear shop
 **Context:** HNG Internship Individual Task 2 + real deployment for a family business
 **Owner:** Samstar
-**Status:** Phases 1–6 and 8 ✅ · Phase 7 (Customer accounts) in progress (see `docs/phase-7-setup.md`) · Next: Phase 9 (Custom design requests)
+**Status:** Phases 1–6 and 8 ✅ · Phase 7 (Customer accounts) in progress (see `docs/phase-7-setup.md`) · Phase 9a (UI refresh, `docs/phase-9a-ui-refresh.md`) in progress · Next: Phase 9 (Custom design requests)
 **Live:** https://pfc-shop.vercel.app (frontend) · https://pfc-shop.onrender.com (API)
 **Submission deadline:** 2026-10-03 (tomorrow). Strategy: **deploy first, submit the live URL, keep shipping to the same URL.**
 **Last updated:** 2026-10-02
@@ -453,6 +453,7 @@ NEXT_PUBLIC_WHATSAPP_NUMBER=
 | D27 | Zod request schemas avoid `.default()` on fields that PATCH reuses via `.partial()`; defaults are applied in the service instead                                                                                                      | Decided                       |
 | D28 | Guest orders are linked to an account at Google sign-in when the order email equals the verified Google email (case-insensitive); linking never blocks login                                                                          | Decided                       |
 | D29 | No profile table yet: checkout prefills phone/location from the customer's latest order, so Phase 7 needs no migration                                                                                                                | Decided                       |
+| D30 | Light theme only: starter dark-mode CSS removed; design tokens (cobalt `#1B3BFF` accent, ink/muted/line neutrals) in `@theme`; Bricolage Grotesque + Hanken Grotesk; one bold moment (home hero), sentence-case labels                | Decided                       |
 | D17 | Session JWT holds only the user id; role is read from the DB on every request (admin list changes apply on next login/request)                                                                                                        | Decided                       |
 | D8  | Guest checkout allowed; Google account optional for customers                                                                                                                                                                         | Proposed                      |
 | D9  | Server recomputes all prices/totals; snapshots on order items                                                                                                                                                                         | Decided                       |
@@ -480,6 +481,7 @@ NEXT_PUBLIC_WHATSAPP_NUMBER=
 | 2026-10-05 | 8     | Phase 8 guide written (`docs/phase-8-setup.md`): admin orders first, then catalog + Cloudinary                                                                                                                       | Build `feat/admin-orders`, release, then `feat/admin-catalog`; then Phase 7 accounts                        |
 | 2026-10-06 | 8 ✅  | Admin dashboard live: stats, orders list/detail with status updates, products and categories CRUD, Cloudinary photo upload                                                                                           | Phase 7                                                                                                     |
 | 2026-10-06 | 7     | Phase 7 guide written (`docs/phase-7-setup.md`): My orders, checkout prefill, guest-order linking by verified Google email                                                                                           | Build `feat/account-orders`, release; then Phase 9 custom design                                            |
+| 2026-10-06 | 9a    | UI refresh guide written (`docs/phase-9a-ui-refresh.md`): tokens, forced light theme, header/mobile menu, footer, product card, hero                                                                                 | Build `feat/ui-refresh`, release; then Phase 9 custom design                                                |
 
 ## 17. Git Workflow
 

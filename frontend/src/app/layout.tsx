@@ -1,25 +1,22 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Bricolage_Grotesque, Hanken_Grotesk } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-// 1. Import your AuthProvider component
 import { AuthProvider } from "@/lib/auth/AuthProvider";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Fonts: headings and body text
+const display = Bricolage_Grotesque({
   subsets: ["latin"],
+  variable: "--font-bricolage",
 });
+const body = Hanken_Grotesk({ subsets: ["latin"], variable: "--font-hanken" });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
+// Default page title and description
 export const metadata: Metadata = {
-  title: { default: "PAT Footwear Collection", template: "%s | PFC" },
+  title: { default: "PFC - PAT Footwear Collection", template: "%s | PFC" },
   description:
-    "Shoes, slides, sandals and slippers made by PAT Footwear Collection. Order online or request a custom design.",
+    "Shop footwear from PAT Footwear Collection. Pick your size and colour and pay securely online.",
 };
 
 export default function RootLayout({
@@ -28,17 +25,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="h-full flex flex-col">
-        {/* 2. Wrap EVERYTHING that needs auth state inside the AuthProvider */}
+    <html lang="en" className={`${display.variable} ${body.variable}`}>
+      <body className="min-h-screen">
+        {/* Everything inside needs the signed-in user */}
         <AuthProvider>
           <Header />
-          <main className="flex-1 mx-auto w-full max-w-6xl px-4 py-8">
-            {children}
-          </main>
+          <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
           <Footer />
         </AuthProvider>
       </body>

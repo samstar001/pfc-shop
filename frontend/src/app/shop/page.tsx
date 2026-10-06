@@ -36,7 +36,7 @@ export default async function ShopPage({ searchParams }: Props) {
       <div className="mt-4 flex flex-wrap gap-2">
         <Link
           href="/shop"
-          className={`rounded-full border px-4 py-1 text-sm ${!category ? "bg-black text-white" : "hover:bg-gray-50"}`}
+          className={`rounded-full border px-4 py-1 text-sm ${!category ? "bg-brand text-white" : "hover:bg-gray-50"}`}
         >
           All
         </Link>
@@ -44,7 +44,7 @@ export default async function ShopPage({ searchParams }: Props) {
           <Link
             key={c.id}
             href={`/shop?category=${c.slug}`}
-            className={`rounded-full border px-4 py-1 text-sm ${category === c.slug ? "bg-black text-white" : "hover:bg-gray-50"}`}
+            className={`rounded-full border px-4 py-1 text-sm ${category === c.slug ? "bg-brand text-white" : "hover:bg-gray-50"}`}
           >
             {c.name}
           </Link>
