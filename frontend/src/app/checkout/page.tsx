@@ -37,6 +37,21 @@ export default function CheckoutPage() {
     setEmail((e) => e || user.email);
   }, [user]);
 
+  // Signed-in customers: also fill in phone and location from their latest order (without overwriting what they typed)
+  useEffect(() => {
+    if (!user) return;
+    fetch("/api/v1/account/checkout-defaults", { cache: "no-store" })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((d: { phone?: string; location?: string } | null) => {
+        if (!d) return;
+        setPhone((p) => p || d.phone || "");
+        setLocation((l) => l || d.location || "");
+      })
+      .catch(() => {
+        /* prefill is a convenience: ignore errors */
+      });
+  }, [user]);
+
   // Send the order to the API
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

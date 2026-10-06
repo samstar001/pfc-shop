@@ -6,7 +6,7 @@
 **Project:** PAT Footwear Collection (PFC) — online footwear shop
 **Context:** HNG Internship Individual Task 2 + real deployment for a family business
 **Owner:** Samstar
-**Status:** Phases 1–5 ✅ (all 4 HNG requirements live) · Phase 6 (Paystack test payments) in progress (see `docs/phase-6-setup.md`)
+**Status:** Phases 1–6 and 8 ✅ · Phase 7 (Customer accounts) in progress (see `docs/phase-7-setup.md`) · Next: Phase 9 (Custom design requests)
 **Live:** https://pfc-shop.vercel.app (frontend) · https://pfc-shop.onrender.com (API)
 **Submission deadline:** 2026-10-03 (tomorrow). Strategy: **deploy first, submit the live URL, keep shipping to the same URL.**
 **Last updated:** 2026-10-02
@@ -196,7 +196,8 @@ Auth cookie: `pfc_session` (httpOnly). 🔓 public · 🔐 logged-in · 🛡️ 
 |---|---|---|---|
 | POST | `/orders` | 🔓 (links user if logged in) | Create order. Returns `{ id, reference, subtotalNgn, paymentStatus, accessToken, whatsappUrl }` |
 | GET | `/orders/:reference?token=` | 🔓 token or 🔐 owner/admin | Order status page data |
-| GET | `/account/orders` | 🔐 | My orders |
+| GET | `/account/orders?page=&pageSize=` | 🔐 | My orders (newest first) with `payable` flag and item lines |
+| GET | `/account/checkout-defaults` | 🔐 | `{ name, email, phone, location }` (phone/location from the latest order) |
 
 `POST /orders` body:
 
@@ -234,7 +235,7 @@ On success: save → (CUSTOM) send quote emails now → return.
 | POST | `/uploads/design` | 🔓 rate-limited | multipart image (jpeg/png/webp ≤ 5 MB, magic-byte check) → Cloudinary → `{ url }` |
 
 **Admin 🛡️**
-`GET/POST /admin/categories` · `PATCH/DELETE /admin/categories/:id` · `GET/POST /admin/products` · `PATCH/DELETE /admin/products/:id` · `POST /admin/products/:id/images` · `PATCH /admin/products/:id/publish` · `GET /admin/orders?status=&type=&paymentStatus=&page=` · `GET /admin/orders/:id` · `PATCH /admin/orders/:id/status`
+`GET /admin/stats` · `GET /admin/orders?status=&paymentStatus=&type=&q=&page=` · `GET /admin/orders/:id` · `PATCH /admin/orders/:id/status` · `GET/POST /admin/products` · `GET/PATCH/DELETE /admin/products/:id` · `GET/POST /admin/categories` · `PATCH/DELETE /admin/categories/:id` · `POST /admin/uploads/image` (multipart field `file`, JPEG/PNG/WebP ≤ 5 MB, returns `{ url }`; product forms save the returned URLs in `images`)
 
 **Misc** 🔓 `GET /health`
 
@@ -372,20 +373,22 @@ NEXT_PUBLIC_WHATSAPP_NUMBER=
 
 ### 🏁 SUBMISSION CHECKPOINT — Phases 1–5 live on `main`. Submit the URL here, then continue.
 
-### Phase 6 — Paystack Test Payments (in progress)
+### Phase 6 — Paystack Test Payments ✅
 
 - Step-by-step guide: `docs/phase-6-setup.md`
-- [ ] Initialize, redirect, verify, webhook (signature + idempotent), payment status on order
-- [ ] Emails fire on `PAID`
+- [x] Initialize, redirect, verify, webhook (signature + idempotent), payment status on order
+- [x] Emails fire on `PAID`
 - **Done when:** a test-card payment flips an order to `PAID`.
 
-### Phase 7 — Accounts
+### Phase 7 — Accounts (in progress)
 
+- Step-by-step guide: `docs/phase-7-setup.md` (branch `feat/account-orders`; no migration, no new env vars)
 - [ ] `/account` order history; checkout prefill when signed in
 
-### Phase 8 — Admin Dashboard
+### Phase 8 — Admin Dashboard ✅
 
-- [ ] Product + category CRUD, Cloudinary image upload, publish toggle, order list + status update
+- Step-by-step guide: `docs/phase-8-setup.md` (branches `feat/admin-orders`, then `feat/admin-catalog`)
+- [x] Product + category CRUD, Cloudinary image upload, publish toggle, order list + status update
 
 ### Phase 9 — Custom Design Flow
 
@@ -445,6 +448,11 @@ NEXT_PUBLIC_WHATSAPP_NUMBER=
 | D22 | Checkout email is now REQUIRED (Paystack needs it; receipts go there)                                                                                                                                                                 | Decided                       |
 | D23 | Payments: fresh payment reference per attempt; order id in Paystack metadata; webhook (HMAC-SHA512 on raw body) and callback-verify both call idempotent `settlePayment()`; PAID only if status success + NGN + amount = subtotal×100 | Decided                       |
 | D24 | Payment covers items only; delivery fee confirmed separately by PFC                                                                                                                                                                   | Decided                       |
+| D25 | Build Phase 8 (Admin dashboard) before Phase 7 (Accounts): PFC needs to see and manage orders first                                                                                                                                   | Decided                       |
+| D26 | Admin images: one generic `POST /admin/uploads/image` (magic-byte check, 5 MB, Cloudinary) returns a URL; products store URLs in `images` (replaces the per-product images endpoint)                                                  | Decided                       |
+| D27 | Zod request schemas avoid `.default()` on fields that PATCH reuses via `.partial()`; defaults are applied in the service instead                                                                                                      | Decided                       |
+| D28 | Guest orders are linked to an account at Google sign-in when the order email equals the verified Google email (case-insensitive); linking never blocks login                                                                          | Decided                       |
+| D29 | No profile table yet: checkout prefills phone/location from the customer's latest order, so Phase 7 needs no migration                                                                                                                | Decided                       |
 | D17 | Session JWT holds only the user id; role is read from the DB on every request (admin list changes apply on next login/request)                                                                                                        | Decided                       |
 | D8  | Guest checkout allowed; Google account optional for customers                                                                                                                                                                         | Proposed                      |
 | D9  | Server recomputes all prices/totals; snapshots on order items                                                                                                                                                                         | Decided                       |
@@ -468,6 +476,10 @@ NEXT_PUBLIC_WHATSAPP_NUMBER=
 | 2026-10-03 | 5     | Phase 5 guide written (`docs/phase-5-setup.md`); HNG deadline extended                                                                                                                                               | Verify Mailgun recipients, build `feat/mailgun-emails`, deploy, then decide: submit now or do Phase 6 first |
 | 2026-10-03 | 5 ✅  | Mailgun order confirmation + PFC notification working (sandbox, authorized recipients)                                                                                                                               | Phase 6                                                                                                     |
 | 2026-10-03 | 6     | Phase 6 guide written (`docs/phase-6-setup.md`)                                                                                                                                                                      | Create Paystack test account, build `feat/paystack-payments`, set test webhook URL after deploy             |
+| 2026-10-05 | 6 ✅  | Paystack test payments working end to end (initialize, callback verify, webhook, receipt + PAID emails). Fixed 404: callback folder must be `[token]` with brackets                                                  | Phase 8 admin dashboard (before Phase 7 accounts)                                                           |
+| 2026-10-05 | 8     | Phase 8 guide written (`docs/phase-8-setup.md`): admin orders first, then catalog + Cloudinary                                                                                                                       | Build `feat/admin-orders`, release, then `feat/admin-catalog`; then Phase 7 accounts                        |
+| 2026-10-06 | 8 ✅  | Admin dashboard live: stats, orders list/detail with status updates, products and categories CRUD, Cloudinary photo upload                                                                                           | Phase 7                                                                                                     |
+| 2026-10-06 | 7     | Phase 7 guide written (`docs/phase-7-setup.md`): My orders, checkout prefill, guest-order linking by verified Google email                                                                                           | Build `feat/account-orders`, release; then Phase 9 custom design                                            |
 
 ## 17. Git Workflow
 

@@ -174,3 +174,17 @@ export type AdminProductDetail = {
   isPopular: boolean;
   isCustomizable: boolean;
 };
+
+// ---------- Customer account ----------
+export type AccountOrderSummary = {
+  id: string;
+  reference: string;
+  type: "CATALOGUE" | "CUSTOM";
+  status: string;
+  paymentStatus: string;
+  totalQuantity: number;
+  subtotalNgn: number | null;
+  createdAt: string;
+  payable: boolean;
+  lines: { productName: string; color: string | null; quantity: number }[];
+};
