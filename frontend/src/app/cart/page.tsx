@@ -26,7 +26,7 @@ export default function CartPage() {
         <p className="mt-4 text-gray-600">Your cart is empty.</p>
         <Link
           href="/shop"
-          className="mt-4 inline-block rounded bg-black px-5 py-3 text-white"
+          className="mt-4 inline-block rounded bg-brand px-5 py-3 text-white"
         >
           Browse the collection
         </Link>
@@ -123,7 +123,7 @@ export default function CartPage() {
         </p>
         <Link
           href="/checkout"
-          className="rounded bg-black px-6 py-3 font-medium text-white"
+          className="rounded bg-brand px-6 py-3 font-medium text-white"
         >
           Proceed to checkout
         </Link>

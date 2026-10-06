@@ -100,7 +100,7 @@ export default function AdminOrderPage() {
         <button
           onClick={saveStatus}
           disabled={saving || newStatus === order.status}
-          className="rounded bg-black px-4 py-1 text-sm text-white disabled:bg-gray-300"
+          className="rounded bg-brand px-4 py-1 text-sm text-white disabled:bg-gray-300"
         >
           {saving ? "Saving..." : "Save"}
         </button>

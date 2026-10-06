@@ -142,7 +142,7 @@ export default function AdminCategoriesPage() {
         <div className="flex gap-3">
           <button
             disabled={saving}
-            className="rounded bg-black px-4 py-2 text-sm text-white disabled:bg-gray-400"
+            className="rounded bg-brand px-4 py-2 text-sm text-white disabled:bg-gray-400"
           >
             {saving ? "Saving..." : editingId ? "Save changes" : "Add category"}
           </button>

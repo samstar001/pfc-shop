@@ -123,7 +123,7 @@ export default function AdminOrdersPage() {
             placeholder="Search reference, name, phone, email"
             className="w-64 rounded border px-3 py-1 text-sm"
           />
-          <button className="rounded bg-black px-3 py-1 text-sm text-white">
+          <button className="rounded bg-brand px-3 py-1 text-sm text-white">
             Search
           </button>
         </form>

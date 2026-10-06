@@ -65,7 +65,7 @@ export default async function ProductPage({ params }: Props) {
 
       {/* Product information */}
       <div>
-        <p className="text-sm uppercase tracking-wide text-gray-500">
+        <p className="text-sm text-gray-500">
           {p.category.name}
         </p>
         <h1 className="mt-1 text-3xl font-bold">{p.name}</h1>

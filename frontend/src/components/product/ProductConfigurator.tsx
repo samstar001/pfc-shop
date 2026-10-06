@@ -60,7 +60,7 @@ export default function ProductConfigurator({
             aria-pressed={color === c.name}
             className={`flex items-center gap-2 rounded-full border px-3 py-1 text-sm ${
               color === c.name
-                ? "border-black bg-black text-white"
+                ? "border-black bg-brand text-white"
                 : "hover:bg-gray-50"
             }`}
           >
@@ -103,7 +103,7 @@ export default function ProductConfigurator({
         type="button"
         onClick={handleAdd}
         disabled={total === 0}
-        className="mt-4 w-full rounded bg-black px-5 py-3 font-medium text-white disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-600"
+        className="mt-4 w-full rounded bg-brand px-5 py-3 font-medium text-white disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-600"
       >
         {total === 0 ? "Choose sizes to add to cart" : "Add to cart"}
       </button>

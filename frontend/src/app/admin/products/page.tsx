@@ -73,7 +73,7 @@ export default function AdminProductsPage() {
         <h1 className="text-2xl font-bold">Products</h1>
         <Link
           href="/admin/products/new"
-          className="rounded bg-black px-4 py-2 text-sm text-white"
+          className="rounded bg-brand px-4 py-2 text-sm text-white"
         >
           + New product
         </Link>

@@ -253,7 +253,7 @@ export default function ProductForm({
       <div className="flex gap-3">
         <button
           disabled={saving}
-          className="rounded bg-black px-5 py-2 font-medium text-white disabled:bg-gray-400"
+          className="rounded bg-brand px-5 py-2 font-medium text-white disabled:bg-gray-400"
         >
           {saving ? "Saving..." : editing ? "Save changes" : "Create product"}
         </button>

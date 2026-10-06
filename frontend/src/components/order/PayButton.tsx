@@ -44,7 +44,7 @@ export default function PayButton({
         type="button"
         onClick={pay}
         disabled={loading}
-        className="rounded bg-black px-5 py-3 font-medium text-white disabled:bg-gray-400"
+        className="rounded bg-brand px-5 py-3 font-medium text-white disabled:bg-gray-400"
       >
         {loading ? "Redirecting to Paystack..." : label}
       </button>
