@@ -14,7 +14,7 @@ const body = Hanken_Grotesk({ subsets: ["latin"], variable: "--font-hanken" });
 
 // Default page title and description
 export const metadata: Metadata = {
-  title: { default: "PFC - PAT Footwear Collection", template: "%s | PFC" },
+  title: { default: "PAT Footwear Collection", template: "%s | PFC" },
   description:
     "Shop footwear from PAT Footwear Collection. Pick your size and colour and pay securely online.",
 };
