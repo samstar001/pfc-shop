@@ -6,3 +6,12 @@ export function formatNgn(amount: number): string {
     maximumFractionDigits: 0,
   }).format(amount);
 }
+
+// Format an ISO date for the admin, in Nigerian time, e.g. "5 Oct 2026, 4:05 pm"
+export function formatDateTime(iso: string): string {
+  return new Intl.DateTimeFormat("en-NG", {
+    dateStyle: "medium",
+    timeStyle: "short",
+    timeZone: "Africa/Lagos",
+  }).format(new Date(iso));
+}
