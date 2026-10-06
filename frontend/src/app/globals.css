@@ -1,26 +1,131 @@
 @import "tailwindcss";
 
+/* Design tokens: colours and fonts used across the whole site */
+@theme {
+  --color-brand: #6d4e37;
+  --color-brand-dark: #1229c7;
+  --color-brand-soft: #e9edff;
+  --color-ink: #101418;
+  --color-muted: #5b6470;
+  --color-line: #e3e6eb;
+  --color-page: #f7f8fa;
+  --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Always use the light theme (the starter's dark-mode block is removed on purpose) */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  /* Page background and text */
+  body {
+    background: var(--color-page);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  /* Headings use the display font */
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+
+  /* Tailwind v4 borders default to the text colour: use the soft line colour instead */
+  *,
+  ::before,
+  ::after {
+    border-color: var(--color-line);
+  }
+
+  /* Form fields: white, readable, with a clear focus ring */
+  input,
+  select,
+  textarea {
+    background: #fff;
+    color: var(--color-ink);
+    border: 1px solid #cdd2da;
+    border-radius: 0.5rem;
+    padding: 0.55rem 0.75rem;
+    font: inherit;
+  }
+  input::placeholder,
+  textarea::placeholder {
+    color: #8a929e;
+  }
+  input[type="checkbox"],
+  input[type="radio"] {
+    padding: 0;
+    accent-color: var(--color-brand);
+  }
+
+  /* Keyboard focus is always visible */
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+
+  /* Pointer cursor on buttons */
+  button:not(:disabled) {
+    cursor: pointer;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* Main action button */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 0.5rem;
+    background: var(--color-brand);
+    color: #fff;
+    padding: 0.65rem 1.1rem;
+    font-weight: 600;
+    transition: background 0.15s;
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: var(--color-brand-dark);
+  }
+  .btn-primary:disabled {
+    opacity: 0.5;
+  }
+
+  /* Secondary action button */
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid #cdd2da;
+    background: #fff;
+    color: var(--color-ink);
+    padding: 0.65rem 1.1rem;
+    font-weight: 600;
+  }
+  .btn-secondary:hover:not(:disabled) {
+    background: var(--color-page);
+  }
+
+  /* White box used for forms, summaries and lists */
+  .panel {
+    background: #fff;
+    border: 1px solid var(--color-line);
+    border-radius: 0.75rem;
+  }
+}
+
+/* Respect people who turn animations off */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
 }

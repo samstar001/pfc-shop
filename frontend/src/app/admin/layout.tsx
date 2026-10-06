@@ -53,7 +53,7 @@ export default function AdminLayout({
             <Link
               key={item.href}
               href={item.href}
-              className={`rounded-full px-4 py-1 ${active ? "bg-black text-white" : "border hover:bg-gray-50"}`}
+              className={`rounded-full px-4 py-1 ${active ? "bg-brand text-white" : "border hover:bg-gray-50"}`}
             >
               {item.label}
             </Link>

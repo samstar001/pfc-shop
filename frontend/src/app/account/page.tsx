@@ -91,7 +91,7 @@ export default function AccountPage() {
           </p>
           <Link
             href="/shop"
-            className="mt-4 inline-block rounded bg-black px-5 py-3 text-white"
+            className="mt-4 inline-block rounded bg-brand px-5 py-3 text-white"
           >
             Browse the collection
           </Link>
@@ -140,7 +140,7 @@ export default function AccountPage() {
               {o.payable && (
                 <Link
                   href={`/order/${o.reference}`}
-                  className="ml-auto rounded bg-black px-3 py-1 text-white"
+                  className="ml-auto rounded bg-brand px-3 py-1 text-white"
                 >
                   Pay now
                 </Link>

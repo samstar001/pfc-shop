@@ -65,7 +65,7 @@ export default function ImageUploader({
                 className="object-cover"
               />
               {i === 0 && (
-                <span className="absolute left-1 top-1 rounded bg-black px-1.5 text-xs text-white">
+                <span className="absolute left-1 top-1 rounded bg-brand px-1.5 text-xs text-white">
                   Main
                 </span>
               )}
