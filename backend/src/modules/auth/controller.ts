@@ -10,6 +10,7 @@ import {
   signSession,
 } from "../../lib/session.js";
 import { buildGoogleAuthUrl, getGoogleProfile, upsertUser } from "./service.js";
+import { linkGuestOrders } from "../account/service.js";
 
 // Only allow redirects to paths on our own site (prevents open-redirect attacks)
 function safeNext(raw: unknown): string {
@@ -66,6 +67,7 @@ export async function googleCallback(req: Request, res: Response) {
     // Verify with Google, create/update the user, start a session
     const profile = await getGoogleProfile(code);
     const user = await upsertUser(profile);
+    await linkGuestOrders(user); // attach earlier guest orders with the same email (never throws)
     res.cookie(
       SESSION_COOKIE,
       await signSession(user.id),
