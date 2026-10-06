@@ -6,11 +6,16 @@ import { useEffect, useState } from "react";
 import type { OrderDetail } from "@/lib/api/types";
 import { formatNgn } from "@/lib/format";
 import PayButton from "./PayButton";
+import { useAuth } from "@/lib/auth/AuthProvider";
+import { customerStatusLabel } from "@/lib/orderStatus";
 
 // Loads an order by reference (+ token for guests) and shows its details
 export default function OrderView() {
   const { reference } = useParams<{ reference: string }>();
   const token = useSearchParams().get("token");
+
+  // 1. Hook placed inside the component next to the others
+  const { user } = useAuth();
 
   const [order, setOrder] = useState<OrderDetail | null>(null);
   const [state, setState] = useState<"loading" | "ready" | "missing">(
@@ -60,13 +65,15 @@ export default function OrderView() {
 
       {/* Status */}
       <div className="mt-4 flex flex-wrap gap-2 text-sm">
-        <span className="rounded-full bg-gray-600 px-3 py-1">
-          Status: {order.status.replaceAll("_", " ")}
+        {/* 2. Replaced the default status wrapper with customerStatusLabel formatting */}
+        <span className="rounded-full bg-gray-100 px-3 py-1 text-gray-800">
+          Status: {customerStatusLabel(order.status)}
         </span>
-        <span className="rounded-full bg-gray-600 px-3 py-1">
+        <span className="rounded-full bg-gray-600 px-3 py-1 text-white">
           Payment: {order.paymentStatus.replaceAll("_", " ")}
         </span>
       </div>
+
       {/* Payment state */}
       {order.paymentStatus === "PAID" ? (
         <p className="mt-3 rounded bg-green-50 p-3 text-sm text-green-900">
@@ -86,6 +93,21 @@ export default function OrderView() {
           </p>
         </div>
       ) : null}
+
+      {/* 3. Guests wrapper added directly following the payment message module */}
+      {!user && order.customerEmail && (
+        <p className="mt-4 rounded bg-gray-50 p-3 text-sm text-gray-700">
+          Want to see all your orders in one place?{" "}
+          <a
+            href={`/api/v1/auth/google/login?next=/account`}
+            className="font-medium underline text-blue-600"
+          >
+            Sign in with Google
+          </a>{" "}
+          using <strong>{order.customerEmail}</strong> and this order will be
+          added to your account.
+        </p>
+      )}
 
       {/* Items */}
       <div className="mt-6 space-y-3">
@@ -127,7 +149,6 @@ export default function OrderView() {
 
       {/* Actions */}
       <div className="mt-8 flex flex-wrap items-start gap-3">
-        {/* Pay button only while the order is unpaid */}
         {order.paymentStatus !== "PAID" &&
           order.type === "CATALOGUE" &&
           order.subtotalNgn != null && (
@@ -138,22 +159,6 @@ export default function OrderView() {
             />
           )}
 
-        {order.whatsappUrl && (
-          <a
-            href={order.whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded bg-green-600 px-5 py-3 font-medium text-white"
-          >
-            Send order on WhatsApp
-          </a>
-        )}
-        <Link href="/shop" className="rounded border px-5 py-3 font-medium">
-          Continue shopping
-        </Link>
-      </div>
-
-      <div className="mt-8 flex flex-wrap gap-3">
         {order.whatsappUrl && (
           <a
             href={order.whatsappUrl}

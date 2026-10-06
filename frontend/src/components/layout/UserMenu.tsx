@@ -27,10 +27,10 @@ export default function UserMenu() {
   return (
     <div className="flex items-center gap-3 text-sm">
       <Link href="/account" className="hover:underline">
-        {user.name.split(" ")[0]}
+        My orders
       </Link>
       {user.role === "ADMIN" && (
-        <Link href="/admin/products" className="rounded border px-2 py-0.5">
+        <Link href="/admin" className="rounded border px-2 py-0.5">
           Admin
         </Link>
       )}
