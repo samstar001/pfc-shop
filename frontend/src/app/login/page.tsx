@@ -34,7 +34,7 @@ export default async function LoginPage({ searchParams }: Props) {
       {/* Plain <a> on purpose: this must be a full page navigation to the API, not a client-side route */}
       <a
         href={`/api/v1/auth/google/login?next=${encodeURIComponent(safeNext)}`}
-        className="mt-6 inline-block w-full rounded border border-gray-300 bg-white px-5 py-3 font-medium shadow-sm hover:bg-gray-50"
+        className="btn-secondary mt-6 inline-block w-full"
       >
         Continue with Google
       </a>

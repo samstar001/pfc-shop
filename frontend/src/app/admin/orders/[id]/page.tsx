@@ -78,7 +78,7 @@ export default function AdminOrderPage() {
       </div>
 
       {/* Change status */}
-      <div className="mt-6 flex flex-wrap items-center gap-2 rounded-lg border p-4">
+      <div className="panel mt-6 flex flex-wrap items-center gap-2 p-4">
         <label className="text-sm font-medium" htmlFor="status">
           Order status
         </label>
@@ -100,7 +100,7 @@ export default function AdminOrderPage() {
         <button
           onClick={saveStatus}
           disabled={saving || newStatus === order.status}
-          className="rounded bg-brand px-4 py-1 text-sm text-white disabled:bg-gray-300"
+          className="btn-primary text-sm"
         >
           {saving ? "Saving..." : "Save"}
         </button>
@@ -109,7 +109,7 @@ export default function AdminOrderPage() {
       </div>
 
       {/* Customer */}
-      <div className="mt-6 rounded-lg border p-4 text-sm">
+      <div className="panel mt-6 p-4 text-sm">
         <h2 className="font-semibold">Customer</h2>
         <p className="mt-2">{order.customerName}</p>
         <p>{order.customerPhone}</p>
@@ -136,14 +136,14 @@ export default function AdminOrderPage() {
           </a>
           <a
             href={`tel:${order.customerPhone}`}
-            className="rounded border px-3 py-1.5"
+            className="btn-secondary"
           >
             Call
           </a>
           {order.customerEmail && (
             <a
               href={`mailto:${order.customerEmail}`}
-              className="rounded border px-3 py-1.5"
+              className="btn-secondary"
             >
               Email
             </a>
@@ -155,7 +155,7 @@ export default function AdminOrderPage() {
       <div className="mt-6 space-y-3">
         <h2 className="font-semibold">Items</h2>
         {order.items.map((i) => (
-          <div key={i.id} className="rounded-lg border p-4 text-sm">
+          <div key={i.id} className="panel p-4 text-sm">
             <p className="font-medium">
               {i.productName}
               {i.color ? ` · ${i.color}` : ""}
@@ -202,7 +202,7 @@ export default function AdminOrderPage() {
       </div>
 
       {/* Payment details */}
-      <div className="mt-6 rounded-lg border p-4 text-sm">
+      <div className="panel mt-6 p-4 text-sm">
         <h2 className="font-semibold">Payment</h2>
         <p className="mt-2">Status: {statusLabel(order.paymentStatus)}</p>
         {order.paidAt && <p>Paid: {formatDateTime(order.paidAt)}</p>}

@@ -97,7 +97,7 @@ export default function AdminCategoriesPage() {
       {/* Add / edit form */}
       <form
         onSubmit={handleSubmit}
-        className="mt-4 space-y-3 rounded-lg border p-4"
+        className="panel mt-4 space-y-3 p-4"
       >
         <h2 className="font-semibold">
           {editingId ? "Edit category" : "Add a category"}
@@ -142,7 +142,7 @@ export default function AdminCategoriesPage() {
         <div className="flex gap-3">
           <button
             disabled={saving}
-            className="rounded bg-brand px-4 py-2 text-sm text-white disabled:bg-gray-400"
+            className="btn-primary text-sm"
           >
             {saving ? "Saving..." : editingId ? "Save changes" : "Add category"}
           </button>
@@ -150,7 +150,7 @@ export default function AdminCategoriesPage() {
             <button
               type="button"
               onClick={resetForm}
-              className="rounded border px-4 py-2 text-sm"
+              className="btn-secondary text-sm"
             >
               Cancel
             </button>
@@ -172,7 +172,7 @@ export default function AdminCategoriesPage() {
         {items?.map((c) => (
           <div
             key={c.id}
-            className="flex flex-wrap items-center justify-between gap-2 rounded-lg border p-3 text-sm"
+            className="panel flex flex-wrap items-center justify-between gap-2 p-3 text-sm"
           >
             <div>
               <p className="font-medium">

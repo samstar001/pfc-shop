@@ -112,7 +112,7 @@ export default function CheckoutPage() {
         <p className="mt-4 text-gray-600">Your cart is empty.</p>
         <Link
           href="/shop"
-          className="mt-4 inline-block rounded bg-brand px-5 py-3 text-white"
+          className="btn-primary mt-4 inline-block"
         >
           Browse the collection
         </Link>
@@ -207,14 +207,14 @@ export default function CheckoutPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="w-full rounded bg-brand px-5 py-3 font-medium text-white disabled:bg-gray-400"
+          className="btn-primary w-full"
         >
           {submitting ? "Placing order..." : "Place order"}
         </button>
       </form>
 
       {/* Order summary */}
-      <aside className="h-fit rounded-lg border p-4">
+      <aside className="panel h-fit p-4">
         <h2 className="font-semibold">Order summary</h2>
         <div className="mt-3 space-y-3 text-sm">
           {items.map((i) => (
