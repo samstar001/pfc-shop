@@ -134,3 +134,43 @@ export type AdminOrderDetail = {
     colorNote: string | null;
   }[];
 };
+
+export type AdminCategory = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  sortOrder: number;
+  isActive: boolean;
+  productCount: number;
+};
+
+export type AdminProductSummary = {
+  id: string;
+  name: string;
+  slug: string;
+  category: { id: string; name: string };
+  thumbnail: string | null;
+  priceNgn: number;
+  isPublished: boolean;
+  isFeatured: boolean;
+  isNew: boolean;
+  isPopular: boolean;
+};
+
+export type AdminProductDetail = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  categoryId: string;
+  priceNgn: number;
+  colors: Color[];
+  sizes: number[];
+  images: string[];
+  isPublished: boolean;
+  isFeatured: boolean;
+  isNew: boolean;
+  isPopular: boolean;
+  isCustomizable: boolean;
+};
