@@ -42,6 +42,11 @@ const schema = z.object({
 
   // Paystack secret key (use the TEST key, sk_test_...). Optional: without it, payments are disabled.
   PAYSTACK_SECRET_KEY: z.string().default(""),
+
+  // Image uploads (Cloudinary). Optional: without them, uploads return a clear "not set up" error.
+  CLOUDINARY_CLOUD_NAME: z.string().default(""),
+  CLOUDINARY_API_KEY: z.string().default(""),
+  CLOUDINARY_API_SECRET: z.string().default(""),
 });
 
 // Validate once at startup; the app crashes early with a clear error if something is missing
