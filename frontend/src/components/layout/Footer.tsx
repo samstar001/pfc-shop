@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 // Links grouped in the footer
 const shop = [
@@ -18,7 +19,13 @@ export default function Footer() {
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 text-sm sm:grid-cols-3">
         {/* About */}
         <div>
-          <p className="font-display text-xl font-extrabold text-brand">PFC</p>
+          <Image
+            src="/logo.png"
+            alt="PAT Footwear Collection"
+            width={88}
+            height={88}
+            className="h-22 w-22"
+          />
           <p className="mt-2 max-w-xs text-muted">
             PAT Footwear Collection. Choose your pair online and pay securely.
           </p>
