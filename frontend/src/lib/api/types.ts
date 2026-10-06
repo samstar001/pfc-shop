@@ -78,3 +78,59 @@ export type OrderDetail = {
   items: OrderItemDetail[];
   whatsappUrl: string | null;
 };
+
+// ---------- Admin ----------
+export type AdminStats = {
+  totalOrders: number;
+  last7Days: number;
+  awaitingPayment: number;
+  paidOrders: number;
+  paidRevenueNgn: number;
+  byStatus: Record<string, number>;
+};
+
+export type AdminOrderSummary = {
+  id: string;
+  reference: string;
+  type: "CATALOGUE" | "CUSTOM";
+  status: string;
+  paymentStatus: string;
+  customerName: string;
+  customerPhone: string;
+  totalQuantity: number;
+  subtotalNgn: number | null;
+  itemCount: number;
+  createdAt: string;
+};
+
+export type AdminOrderDetail = {
+  id: string;
+  reference: string;
+  type: "CATALOGUE" | "CUSTOM";
+  status: string;
+  paymentStatus: string;
+  paymentReference: string | null;
+  paidAt: string | null;
+  customerName: string;
+  customerPhone: string;
+  customerEmail: string | null;
+  location: string | null;
+  instructions: string | null;
+  totalQuantity: number;
+  subtotalNgn: number | null;
+  createdAt: string;
+  updatedAt: string;
+  account: { name: string; email: string } | null;
+  items: {
+    id: string;
+    productName: string;
+    category: string | null;
+    color: string | null;
+    sizeBreakdown: Record<string, number>;
+    quantity: number;
+    unitPriceNgn: number | null;
+    footwearType: string | null;
+    designImageUrl: string | null;
+    colorNote: string | null;
+  }[];
+};
