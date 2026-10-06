@@ -2,6 +2,7 @@ import Link from "next/link";
 import CartLink from "./CartLink";
 import MobileNav from "./MobileNav";
 import UserMenu from "./UserMenu";
+import Image from "next/image";
 
 // Main navigation links shown on every page
 const links = [
@@ -17,11 +18,23 @@ export default function Header() {
     <header className="sticky top-0 z-40 border-b border-line bg-white/95 backdrop-blur">
       <div className="relative mx-auto flex max-w-6xl items-center gap-4 px-4 py-3">
         {/* Brand / home link */}
+        {/* Brand logo / home link */}
         <Link
           href="/"
-          className="font-display text-2xl font-extrabold tracking-tight text-brand"
+          className="flex items-center gap-3"
+          aria-label="PAT Footwear Collection, home"
         >
-          PFC
+          <Image
+            src="/logo.png"
+            alt=""
+            width={44}
+            height={44}
+            priority
+            className="h-11 w-11"
+          />
+          <span className="hidden font-display text-lg font-extrabold leading-tight tracking-tight sm:block">
+            PAT Footwear
+          </span>
         </Link>
 
         {/* Page links (large screens) */}
