@@ -9,6 +9,7 @@ import { adminFetch } from "@/lib/api/adminClient";
 import type { AdminOrderDetail } from "@/lib/api/types";
 import { formatDateTime, formatNgn } from "@/lib/format";
 import { toWhatsappNumber } from "@/lib/phone";
+import Image from "next/image";
 
 export default function AdminOrderPage() {
   const { id } = useParams<{ id: string }>();
@@ -134,17 +135,11 @@ export default function AdminOrderPage() {
           >
             WhatsApp
           </a>
-          <a
-            href={`tel:${order.customerPhone}`}
-            className="btn-secondary"
-          >
+          <a href={`tel:${order.customerPhone}`} className="btn-secondary">
             Call
           </a>
           {order.customerEmail && (
-            <a
-              href={`mailto:${order.customerEmail}`}
-              className="btn-secondary"
-            >
+            <a href={`mailto:${order.customerEmail}`} className="btn-secondary">
               Email
             </a>
           )}
@@ -178,9 +173,16 @@ export default function AdminOrderPage() {
                 href={i.designImageUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline"
+                className="my-2 block w-fit"
               >
-                View design image
+                <Image
+                  src={i.designImageUrl}
+                  alt="Customer design"
+                  width={320}
+                  height={320}
+                  className="h-64 w-auto rounded-lg border object-contain"
+                />
+                <span className="text-xs underline">Open full size</span>
               </a>
             )}
             <p className="mt-1">

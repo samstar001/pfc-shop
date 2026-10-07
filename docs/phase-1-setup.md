@@ -117,7 +117,9 @@ import "dotenv/config";
 import { z } from "zod";
 
 const schema = z.object({
-  NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
+  NODE_ENV: z
+    .enum(["development", "production", "test"])
+    .default("development"),
   PORT: z.coerce.number().default(8000),
   DATABASE_URL: z.string().min(1),
   FRONTEND_URL: z.string().url().default("http://localhost:3000"),
@@ -162,12 +164,18 @@ app.get("/api/v1/health", async (_req, res) => {
 });
 
 app.use((_req, res) => {
-  res.status(404).json({ error: { code: "NOT_FOUND", message: "Route not found" } });
+  res
+    .status(404)
+    .json({ error: { code: "NOT_FOUND", message: "Route not found" } });
 });
 
 app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
   console.error(err);
-  res.status(500).json({ error: { code: "INTERNAL_ERROR", message: "Something went wrong" } });
+  res
+    .status(500)
+    .json({
+      error: { code: "INTERNAL_ERROR", message: "Something went wrong" },
+    });
 });
 ```
 

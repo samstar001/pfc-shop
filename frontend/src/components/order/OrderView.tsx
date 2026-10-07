@@ -8,6 +8,7 @@ import { formatNgn } from "@/lib/format";
 import PayButton from "./PayButton";
 import { useAuth } from "@/lib/auth/AuthProvider";
 import { customerStatusLabel } from "@/lib/orderStatus";
+import Image from "next/image";
 
 // Loads an order by reference (+ token for guests) and shows its details
 export default function OrderView() {
@@ -60,7 +61,8 @@ export default function OrderView() {
         Thank you, {order.customerName.split(" ")[0]}!
       </h1>
       <p className="mt-2 text-gray-700">
-        Your order <strong>{order.reference}</strong> has been received.
+        Your {order.type === "CUSTOM" ? "custom design request" : "order"}{" "}
+        <strong>{order.reference}</strong> has been received.
       </p>
 
       {/* Status */}
@@ -70,7 +72,11 @@ export default function OrderView() {
           Status: {customerStatusLabel(order.status)}
         </span>
         <span className="rounded-full bg-gray-600 px-3 py-1 text-white">
-          Payment: {order.paymentStatus.replaceAll("_", " ")}
+          {order.paymentStatus !== "NOT_APPLICABLE" && (
+            <span className="rounded-full bg-gray-100 px-3 py-1">
+              Payment: {order.paymentStatus.replaceAll("_", " ")}
+            </span>
+          )}
         </span>
       </div>
 
@@ -92,6 +98,11 @@ export default function OrderView() {
             by PFC.
           </p>
         </div>
+      ) : order.type === "CUSTOM" ? (
+        <p className="mt-3 rounded bg-yellow-50 p-3 text-sm text-yellow-900">
+          PFC will review your design and contact you with a price. You do not
+          need to pay anything now.
+        </p>
       ) : null}
 
       {/* 3. Guests wrapper added directly following the payment message module */}
@@ -122,6 +133,18 @@ export default function OrderView() {
                 .map(([s, n]) => `Size ${s}: ${n}`)
                 .join(" · ")}
             </p>
+            {i.colorNote && (
+              <p className="text-gray-600">Colour: {i.colorNote}</p>
+            )}
+            {i.designImageUrl && (
+              <Image
+                src={i.designImageUrl}
+                alt="Your design"
+                width={240}
+                height={240}
+                className="my-2 h-48 w-auto rounded-lg border object-contain"
+              />
+            )}
             <p>
               {i.quantity} pairs
               {i.unitPriceNgn != null
