@@ -26,7 +26,7 @@ export default function CartPage() {
         <p className="mt-4 text-gray-600">Your cart is empty.</p>
         <Link
           href="/shop"
-          className="mt-4 inline-block rounded bg-brand px-5 py-3 text-white"
+          className="btn-primary mt-4 inline-block"
         >
           Browse the collection
         </Link>
@@ -41,7 +41,7 @@ export default function CartPage() {
       {/* One card per product + color */}
       <div className="mt-6 space-y-4">
         {items.map((item) => (
-          <div key={item.key} className="flex gap-4 rounded-lg border p-4">
+          <div key={item.key} className="panel flex gap-4 p-4">
             <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded bg-gray-100">
               {item.image && (
                 <Image
@@ -123,7 +123,7 @@ export default function CartPage() {
         </p>
         <Link
           href="/checkout"
-          className="rounded bg-brand px-6 py-3 font-medium text-white"
+          className="btn-primary"
         >
           Proceed to checkout
         </Link>

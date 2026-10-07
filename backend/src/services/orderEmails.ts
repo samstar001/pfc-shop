@@ -8,6 +8,8 @@ import {
   buildAdminPaymentEmail,
   buildPaymentReceiptEmail,
 } from "../emails/payment-received.js";
+import { buildAdminNewQuoteEmail } from "../emails/admin-new-quote.js";
+import { buildQuoteReceivedEmail } from "../emails/quote-received.js";
 
 // Send the customer confirmation and the PFC notification for a new order.
 // NEVER throws: an email problem must not affect the order.
@@ -76,5 +78,41 @@ export async function sendPaymentEmails(
     await Promise.allSettled(jobs);
   } catch (err) {
     console.error("[mail] sendPaymentEmails failed", err);
+  }
+}
+
+// Send the "request received" email (customer) and the "new request" notice (PFC). NEVER throws.
+export async function sendQuoteEmails(
+  order: OrderWithItems,
+  accessToken: string,
+): Promise<void> {
+  try {
+    // Link that opens the request page (the token lets guests view it)
+    const base = env.FRONTEND_URL.replace(/\/+$/, "");
+    const orderUrl = `${base}/order/${encodeURIComponent(order.reference)}?token=${encodeURIComponent(accessToken)}`;
+
+    const jobs: Promise<unknown>[] = [];
+
+    // 1) Customer
+    if (order.customerEmail) {
+      const mail = buildQuoteReceivedEmail(
+        order,
+        orderUrl,
+        buildWhatsappUrl(order),
+      );
+      jobs.push(sendEmail({ to: order.customerEmail, ...mail }));
+    }
+
+    // 2) PFC (falls back to the first admin email)
+    const notify = env.PFC_NOTIFY_EMAIL || env.ADMIN_EMAILS[0];
+    if (notify) {
+      jobs.push(
+        sendEmail({ to: notify, ...buildAdminNewQuoteEmail(order, orderUrl) }),
+      );
+    }
+
+    await Promise.allSettled(jobs);
+  } catch (err) {
+    console.error("[mail] sendQuoteEmails failed", err);
   }
 }

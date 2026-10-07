@@ -73,7 +73,7 @@ export default function AdminProductsPage() {
         <h1 className="text-2xl font-bold">Products</h1>
         <Link
           href="/admin/products/new"
-          className="rounded bg-brand px-4 py-2 text-sm text-white"
+          className="btn-primary text-sm"
         >
           + New product
         </Link>
@@ -93,7 +93,7 @@ export default function AdminProductsPage() {
           placeholder="Search by name"
           className="w-64 rounded border px-3 py-1 text-sm"
         />
-        <button className="rounded border px-3 py-1 text-sm">Search</button>
+        <button className="btn-secondary text-sm">Search</button>
       </form>
 
       {error && <p className="mt-4 text-red-700">{error}</p>}

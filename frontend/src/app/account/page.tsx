@@ -69,7 +69,7 @@ export default function AccountPage() {
             {user.name} · {user.email}
           </p>
         </div>
-        <button onClick={logout} className="rounded border px-4 py-2 text-sm">
+        <button onClick={logout} className="btn-secondary text-sm">
           Sign out
         </button>
       </div>
@@ -91,7 +91,7 @@ export default function AccountPage() {
           </p>
           <Link
             href="/shop"
-            className="mt-4 inline-block rounded bg-brand px-5 py-3 text-white"
+            className="btn-primary mt-4 inline-block"
           >
             Browse the collection
           </Link>
@@ -101,7 +101,7 @@ export default function AccountPage() {
       {/* Order cards */}
       <div className="mt-6 space-y-4">
         {data?.items.map((o) => (
-          <div key={o.id} className="rounded-lg border p-4">
+          <div key={o.id} className="panel p-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <Link
                 href={`/order/${o.reference}`}
@@ -140,7 +140,7 @@ export default function AccountPage() {
               {o.payable && (
                 <Link
                   href={`/order/${o.reference}`}
-                  className="ml-auto rounded bg-brand px-3 py-1 text-white"
+                  className="btn-primary ml-auto"
                 >
                   Pay now
                 </Link>

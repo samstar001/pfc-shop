@@ -11,6 +11,7 @@ import { ordersRouter } from "./modules/orders/routes.js";
 import { paymentsRouter } from "./modules/payments/routes.js";
 import { webhooksRouter } from "./modules/payments/webhook.routes.js";
 import { accountRouter } from "./modules/account/routes.js";
+import { uploadsRouter } from "./modules/uploads/routes.js";
 
 export const app = express();
 
@@ -47,6 +48,7 @@ app.use("/api/v1", ordersRouter);
 app.use("/api/v1", adminRouter);
 app.use("/api/v1", paymentsRouter);
 app.use("/api/v1", accountRouter);
+app.use("/api/v1", uploadsRouter);
 
 // 6. GLOBAL ERROR HANDLING ORCHESTRATION (Must stay at the absolute bottom)
 app.use(notFound);

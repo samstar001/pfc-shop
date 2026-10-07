@@ -103,7 +103,7 @@ export default function ProductConfigurator({
         type="button"
         onClick={handleAdd}
         disabled={total === 0}
-        className="mt-4 w-full rounded bg-brand px-5 py-3 font-medium text-white disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-600"
+        className="btn-primary mt-4 w-full"
       >
         {total === 0 ? "Choose sizes to add to cart" : "Add to cart"}
       </button>

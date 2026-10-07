@@ -59,6 +59,9 @@ export type OrderItemDetail = {
   sizeBreakdown: Record<string, number>;
   quantity: number;
   unitPriceNgn: number | null;
+  footwearType?: string | null;
+  colorNote?: string | null;
+  designImageUrl?: string | null;
 };
 
 export type OrderDetail = {
