@@ -6,7 +6,7 @@
 **Project:** PAT Footwear Collection (PFC) — online footwear shop
 **Context:** HNG Internship Individual Task 2 + real deployment for a family business
 **Owner:** Samstar
-**Status:** Phases 1–8, 9a and 9b ✅ (9a/9b = UI refresh: `docs/phase-9a-ui-refresh.md`, `docs/phase-9b-brand-and-buttons.md`) · Next: Phase 9 (Custom design requests)
+**Status:** Phases 1–8, 9a and 9b ✅ (9a/9b = UI refresh: `docs/phase-9a-ui-refresh.md`, `docs/phase-9b-brand-and-buttons.md`) · Phase 9 (Custom design requests, `docs/phase-9-setup.md`) in progress · Next: Phase 10 (Polish and handover)
 **Live:** https://pfc-shop.vercel.app (frontend) · https://pfc-shop.onrender.com (API)
 **Submission deadline:** 2026-10-03 (tomorrow). Strategy: **deploy first, submit the live URL, keep shipping to the same URL.**
 **Last updated:** 2026-10-02
@@ -455,6 +455,7 @@ NEXT_PUBLIC_WHATSAPP_NUMBER=
 | D29 | No profile table yet: checkout prefills phone/location from the customer's latest order, so Phase 7 needs no migration                                                                                                                                                   | Decided                       |
 | D30 | Light theme only: starter dark-mode CSS removed; design tokens (brand brown `#6D4E37` from the PFC logo, replaced the first cobalt accent, ink/muted/line neutrals) in `@theme`; Bricolage Grotesque + Hanken Grotesk; one bold moment (home hero), sentence-case labels | Decided                       |
 | D31 | Logo (`public/logo.png`, tab icon `src/app/icon.png`) replaces the "PFC" text in header, footer and hero; button/box styles unified as `btn-primary`, `btn-secondary`, `panel` via a one-off script                                                                      | Decided                       |
+| D32 | Custom requests: one design per request; email and a description (min 10 chars) required; design image optional but must be on our own Cloudinary account; no price or payment (`NOT_APPLICABLE`); PFC replies by WhatsApp/email                                         | Decided                       |
 | D17 | Session JWT holds only the user id; role is read from the DB on every request (admin list changes apply on next login/request)                                                                                                                                           | Decided                       |
 | D8  | Guest checkout allowed; Google account optional for customers                                                                                                                                                                                                            | Proposed                      |
 | D9  | Server recomputes all prices/totals; snapshots on order items                                                                                                                                                                                                            | Decided                       |
@@ -485,6 +486,7 @@ NEXT_PUBLIC_WHATSAPP_NUMBER=
 | 2026-10-06 | 9a           | UI refresh guide written (`docs/phase-9a-ui-refresh.md`): tokens, forced light theme, header/mobile menu, footer, product card, hero                                                                                 | Build `feat/ui-refresh`, release; then Phase 9 custom design                                                |
 | 2026-10-06 | 9b           | Guide written (`docs/phase-9b-brand-and-buttons.md`): brown palette, logo, restyle script for buttons/panels                                                                                                         | Build, release; send screenshots of weak pages for next design pass, then Phase 9 custom design             |
 | 2026-10-06 | 7, 9a, 9b ✅ | Customer accounts and the UI refresh (brown palette, logo, shared button/panel styles) built, released and confirmed working                                                                                         | Next design pass on weak pages (optional), then Phase 9 custom design requests                              |
+| 2026-10-06 | 9            | Phase 9 guide written (`docs/phase-9-setup.md`): public design upload, CUSTOM orders, quote emails, request form and page, admin image preview                                                                       | Build `feat/custom-design`, release; then Phase 10 polish                                                   |
 
 ## 17. Git Workflow
 

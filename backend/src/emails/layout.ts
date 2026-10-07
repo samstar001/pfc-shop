@@ -66,3 +66,37 @@ export function totalLine(order: OrderWithItems): string {
     ? `${order.totalQuantity} pairs · ${formatNgn(order.subtotalNgn)}`
     : `${order.totalQuantity} pairs`;
 }
+
+// Design details of a custom request (image, type and colour note), as HTML
+export function designHtml(order: OrderWithItems): string {
+  return order.items
+    .filter((i) => i.designImageUrl || i.colorNote || i.footwearType)
+    .map(
+      (i) => `<div style="margin:12px 0;font-size:14px">
+        ${i.footwearType ? `<p style="margin:0 0 4px"><strong>Type:</strong> ${escapeHtml(i.footwearType)}</p>` : ""}
+        ${i.colorNote ? `<p style="margin:0 0 8px"><strong>Colour:</strong> ${escapeHtml(i.colorNote)}</p>` : ""}
+        ${
+          i.designImageUrl
+            ? `<a href="${escapeHtml(i.designImageUrl)}"><img src="${escapeHtml(i.designImageUrl)}" alt="Design image" width="240" style="max-width:100%;border-radius:6px;border:1px solid #eee"></a>`
+            : ""
+        }
+      </div>`,
+    )
+    .join("");
+}
+
+// Design details as plain text
+export function designText(order: OrderWithItems): string {
+  return order.items
+    .map((i) =>
+      [
+        i.footwearType ? `Type: ${i.footwearType}` : "",
+        i.colorNote ? `Colour: ${i.colorNote}` : "",
+        i.designImageUrl ? `Design image: ${i.designImageUrl}` : "",
+      ]
+        .filter(Boolean)
+        .join("\n"),
+    )
+    .filter(Boolean)
+    .join("\n");
+}

@@ -2,12 +2,19 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "../../lib/prisma.js";
 import { HttpError } from "../../middleware/errorHandler.js";
 import { generateReference } from "../../utils/reference.js";
-import type { CreateOrderBody } from "./schema.js";
+import type {
+  CatalogueOrderBody,
+  CreateOrderBody,
+  CustomOrderBody,
+} from "./schema.js";
 
 type ColorOption = { name: string; hex: string };
 
 // Create an order. Prices and totals come from the database, never from the request.
-export async function createOrder(input: CreateOrderBody, userId?: string) {
+async function createCatalogueOrder(
+  input: CatalogueOrderBody,
+  userId?: string,
+) {
   // Load every product in the request (only published ones count)
   const ids = [...new Set(input.items.map((i) => i.productId))];
   const products = await prisma.product.findMany({
@@ -117,4 +124,80 @@ export async function findOrderByReference(reference: string) {
     where: { reference },
     include: { items: true },
   });
+}
+
+// Create an order of either kind
+export async function createOrder(input: CreateOrderBody, userId?: string) {
+  return input.type === "CUSTOM"
+    ? createCustomOrder(input, userId)
+    : createCatalogueOrder(input, userId);
+}
+
+// Custom design request: saved as a quote (no price, no payment)
+async function createCustomOrder(input: CustomOrderBody, userId?: string) {
+  const item = input.items[0];
+
+  // Keep only sizes with a quantity, and make sure each size is a sensible shoe size
+  const sizeBreakdown: Record<string, number> = {};
+  let quantity = 0;
+  for (const [size, qty] of Object.entries(item.sizeBreakdown)) {
+    if (qty <= 0) continue;
+    const n = Number(size);
+    if (n < 20 || n > 50)
+      throw new HttpError(422, "INVALID_SIZE", `Size ${size} is not supported`);
+    sizeBreakdown[size] = qty;
+    quantity += qty;
+  }
+  if (quantity === 0)
+    throw new HttpError(
+      422,
+      "EMPTY_ITEM",
+      "Choose at least one size and quantity",
+    );
+
+  // Save the request. Retry if the random reference collides (very rare).
+  for (let attempt = 0; attempt < 5; attempt++) {
+    try {
+      return await prisma.order.create({
+        data: {
+          reference: generateReference(),
+          userId: userId ?? undefined,
+          type: "CUSTOM",
+          paymentStatus: "NOT_APPLICABLE",
+          customerName: input.customer.name,
+          customerPhone: input.customer.phone,
+          customerEmail: input.customer.email,
+          location: input.customer.location || undefined,
+          instructions: input.instructions,
+          totalQuantity: quantity,
+          items: {
+            create: [
+              {
+                productNameSnapshot: `Custom ${item.footwearType.toLowerCase()}`,
+                categorySnapshot: "Custom design",
+                sizeBreakdown,
+                quantity,
+                footwearType: item.footwearType,
+                designImageUrl: item.designImageUrl,
+                colorNote: item.colorNote || undefined,
+              },
+            ],
+          },
+        },
+        include: { items: true },
+      });
+    } catch (e) {
+      if (
+        e instanceof Prisma.PrismaClientKnownRequestError &&
+        e.code === "P2002"
+      )
+        continue;
+      throw e;
+    }
+  }
+  throw new HttpError(
+    500,
+    "REFERENCE_FAILED",
+    "Could not save your request, please try again",
+  );
 }

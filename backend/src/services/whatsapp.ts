@@ -5,7 +5,11 @@ type OrderWithItems = Prisma.OrderGetPayload<{ include: { items: true } }>;
 
 // Plain-text order message customers can send to PFC on WhatsApp
 export function buildWhatsappMessage(order: OrderWithItems): string {
-  const lines: string[] = [`Hello PFC, I placed order ${order.reference}.`];
+  const lines: string[] = [
+    order.type === "CUSTOM"
+      ? `Hello PFC, I sent a custom design request ${order.reference}.`
+      : `Hello PFC, I placed order ${order.reference}.`,
+  ];
 
   // One block per item: product, color, then each size with its quantity
   for (const item of order.items) {
@@ -17,6 +21,8 @@ export function buildWhatsappMessage(order: OrderWithItems): string {
     for (const [size, qty] of Object.entries(sizes)) {
       lines.push(`Size ${size}: ${qty} pair${qty === 1 ? "" : "s"}`);
     }
+    if (item.colorNote) lines.push(`Colour: ${item.colorNote}`);
+    if (item.designImageUrl) lines.push(`Design: ${item.designImageUrl}`);
   }
 
   // Totals and customer details
